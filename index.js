@@ -16,11 +16,11 @@ app.post("/upload", async (c) => {
     return c.text("No file uploaded", 400);
   }
 
-  const ip = process.env["USE_X_FORWARDED_FOR"] === "true" ? c.req.header("x-forwarded-for").split(",")[0].trim() : info.remote.address;
+  const ip = process.env["USE_X_FORWARDED_FOR"] === "true" ? c.req.header("cf-connecting-ip").split(",")[0].trim() : info.remote.address;
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
-  const message = `IP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nASN: ${ipInfoJson.asn}\nISP: ${ipInfoJson.org}\nHostname: ${ipInfoJson.hostname}`;
+  const message = `IP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\位置: ${ipInfoJson.loc}`;
 
   const buffer = await file.arrayBuffer();
 
