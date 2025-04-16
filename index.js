@@ -16,7 +16,7 @@ app.post("/upload", async (c) => {
     return c.text("No file uploaded", 400);
   }
 
-  const ip = process.env["USE_X_FORWARDED_FOR"] === "true" ? info.headers["x-forwarded-for"].split(",")[0].trim() : info.remote.address;
+  const ip = process.env["USE_X_FORWARDED_FOR"] === "true" ? c.req.header("x-forwarded-for").split(",")[0].trim() : info.remote.address;
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
