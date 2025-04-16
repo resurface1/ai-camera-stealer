@@ -1,0 +1,33 @@
+{
+  "name": "ai-camera-stealer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "packageManager": "pnpm@10.8.1",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
+    "start": "pnpm build && node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@tailwindcss/vite": "^4.1.4",
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.5.0",
+    "hono": "^4.7.7",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.2",
+    "tailwindcss": "^4.1.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.0",
+    "vite": "^6.3.0"
+  }
+}
