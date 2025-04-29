@@ -16,7 +16,7 @@ app.post("/upload", async (c) => {
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
-  const message = `IP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.header("User-Agent") || "Not Found"})\n\n`;
+  const message = `IP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent") || "Not Found"}\n\n`;
 
   const buffer = await file.arrayBuffer();
 
