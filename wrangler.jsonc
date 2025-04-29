@@ -1,5 +1,5 @@
 {
-  "name": "%%PROJECT_NAME%%",
+  "name": "aicamerastealer",
   "main": "cf.js",
   "compatibility_date": "2025-04-01"
 }
