@@ -1,0 +1,5 @@
+{
+  "name": "%%PROJECT_NAME%%",
+  "main": "cf.js",
+  "compatibility_date": "2025-04-01"
+}
