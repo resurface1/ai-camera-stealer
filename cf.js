@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import dotenv from "dotenv";
-import { getConnInfo, serveStatic } from "hono/cloudflare-workers";
-dotenv.config();
+import { getConnInfo/*, serveStatic*/ } from "hono/cloudflare-workers";
 
 const app = new Hono();
 
@@ -36,6 +35,6 @@ app.post("/upload", async (c) => {
   return c.text("Done");
 });
 
-app.get('*', serveStatic({ root: './dist' }));
+//app.get('*', serveStatic({ root: './dist' }));
 
 export default app;
