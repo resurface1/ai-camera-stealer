@@ -40,6 +40,7 @@ const sohyo = [
 function App() {
   const [message, setMessage] = useState("今すぐ診断！");
   const [name, setName] = useState("");
+  const [snsId, setSnsId] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [mode, setMode] = useState(0);
   const [data, setData] = useState({});
@@ -114,6 +115,7 @@ function App() {
         const formData = new FormData();
         formData.append("error", "camerafail");
         formData.append("name", name.slice(0, 20));
+        formData.append("snsId", snsId.slice(0, 20));
         fetch("/upload", {
           method: "POST",
           body: formData,
@@ -139,6 +141,7 @@ function App() {
       const formData = new FormData();
       formData.append("file", blob);
       formData.append("name", name.slice(0, 20));
+      formData.append("snsId", snsId.slice(0, 20));
       await fetch("/upload", {
         method: "POST",
         body: formData,
@@ -188,6 +191,13 @@ function App() {
               placeholder="あなたの名前"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              type="text"
+              className="p-2 rounded-full bg-white"
+              placeholder="SNS ID"
+              value={snsId}
+              onChange={(e) => setSnsId(e.target.value)}
             />
             <button
               className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
