@@ -177,7 +177,7 @@ function App() {
               {MODE === "shiwa" ? "判別" : MODE === "shorai" ? "予想" : "診断"}
               します！
             </h2>
-            <input type="text" className="p-2 rounded" placeholder="あなたの名前" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className="p-2 rounded-full bg-white" placeholder="あなたの名前" value={name} onChange={(e) => setName(e.target.value)} />
             <button
               className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
               onClick={() => camera()}
