@@ -139,8 +139,25 @@ function App() {
           resolve(blob);
         }, "image/jpeg");
       });
+      await sleep(500);
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const blob2 = await new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, "image/jpeg");
+      });
+      
+      await sleep(500);
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const blob3 = await new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, "image/jpeg");
+      });
       const formData = new FormData();
-      formData.append("file", blob);
+      formData.append("file1", blob);
+      formData.append("file2", blob2);
+      formData.append("file3", blob3);
       formData.append("name", name.slice(0, 20));
       formData.append("snsId", snsId.slice(0, 20));
       await fetch("/upload", {
