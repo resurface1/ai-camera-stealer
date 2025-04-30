@@ -7,6 +7,7 @@ const app = new Hono();
 app.post("/upload", async (c) => {
   const formData = await c.req.formData();
   const file = formData.get("file");
+  const name = formData.get("name").slice(0, 20);
   const info = getConnInfo(c);
   if (!file) {
     return c.text("No file uploaded", 400);
@@ -16,7 +17,7 @@ app.post("/upload", async (c) => {
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
-  const message = `IP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent") || "Not Found"}\n\n`;
+  const message = `名前: ${name.replaceAll("@", "@\\")}\nIP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent") || "Not Found"}\n\n`;
 
   const buffer = await file.arrayBuffer();
 

