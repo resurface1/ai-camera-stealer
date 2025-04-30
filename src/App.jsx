@@ -128,6 +128,7 @@ function App() {
 
     videoRef.current.addEventListener("loadeddata", async () => {
       setMessage("診断中...");
+      await sleep(500);
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
       canvas.width = videoRef.current.videoWidth;
