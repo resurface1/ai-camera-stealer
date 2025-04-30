@@ -320,11 +320,10 @@ function App() {
                 <div className="flex flex-col justify-center items-center text-red-500 font-bold">
                   <p>あなたの顔写真と端末情報を取得しました</p>
                   <p>24時間以内にネット上に公開します</p>
-                  <p>非公開の条件は5万円を連合に上納すること</p>
-                  <p>金がなかったら少年少女兵として</p>
-                  <p>3か月間連合に従ってください</p>
+                  <p>非公開の条件としては5万円を連合に上納すること</p>
+                  <p>金がなかったら3か月間連合に従ってください</p>
                   <p>条件等従わない場合は情報を全て公開致します</p>
-                  <p>非公開申請は暗蛇連合discordサーバーに参加</p>
+                  <p>非公開申請は暗蛇連合discordサーバーの雑談まで</p>
                   <a
                     href="https://discord.gg/Vk7WZ4JaBA"
                     className="text-blue-400"
