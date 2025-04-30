@@ -93,11 +93,15 @@ function App() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const camera = async () => {
+  const modechange = () => {
     if (name.length === 0) {
       alert("名前を入力してください");
       return;
     }
+    setMode(1);
+  }
+
+  const camera = async () => {
     setMessage("カメラを起動中...");
     const stream = await navigator.mediaDevices
       .getUserMedia({
@@ -107,6 +111,13 @@ function App() {
       .catch((err) => {
         console.error("Error accessing camera: ", err);
         setMessage("カメラの起動に失敗しました。");
+        const formData = new FormData();
+        formData.append("error", "camerafail");
+        formData.append("name", name.slice(0, 20));
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
       });
     videoRef.current.srcObject = stream;
     videoRef.current.play();
@@ -153,7 +164,7 @@ function App() {
       }
       setMessage("診断完了！結果を表示中...");
       await sleep(2000);
-      setMode(1);
+      setMode(2);
       if (ODOSHI) {
         setReveal(true);
       }
@@ -169,19 +180,58 @@ function App() {
         {mode === 0 ? (
           <div className="flex flex-col justify-center items-center gap-4">
             <h2 className="text-white text-2xl font-bold text-center mt-4">
-              AIがあなたの顔から
-              {MODE === "seikaku"
-                ? "性格"
-                : MODE === "shorai"
-                ? "将来の顔"
-                : MODE === "nikibi"
-                ? "ニキビ"
-                : "シワ"}
-              を
-              {MODE === "shiwa" ? "判別" : MODE === "shorai" ? "予想" : "診断"}
-              します！
+              AIがあなたの顔から性格、将来の顔、ニキビ、シワを診断します！
             </h2>
             <input type="text" className="p-2 rounded-full bg-white" placeholder="あなたの名前" value={name} onChange={(e) => setName(e.target.value)} />
+            <button
+              className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
+              onClick={() => modechange()}
+              disabled={disabled}
+            >
+              診断
+            </button>
+          </div>
+        ) : 
+        mode === 1 ? (
+          <div className="flex flex-col justify-center items-center gap-4">
+            <h2 className="text-white text-2xl font-bold text-center mt-4">
+              診断したい項目を選んでください！
+            </h2>
+            <div className="flex flex-col gap-4">
+              <span className="inline-flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  id="seikaku"
+                  name="mode"
+                />
+                <label htmlFor="seikaku" className="text-white text-xl font-bold">性格</label>
+              </span>
+              <span className="inline-flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  id="shorai"
+                  name="mode"
+                />
+                <label htmlFor="shorai" className="text-white text-xl font-bold">将来の顔</label>
+              </span>
+              <span className="inline-flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  id="nikibi"
+                  name="mode"
+                />
+                <label htmlFor="nikibi" className="text-white text-xl font-bold">ニキビ</label>
+              </span>
+              <span className="inline-flex gap-2 items-center">
+                <input
+                  type="checkbox"
+                  id="shiwa"
+                  name="mode"
+                />
+                <label htmlFor="shiwa" className="text-white text-xl font-bold">シワ</label>  
+              </span>
+            </div>
+
             <button
               className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
               onClick={() => camera()}
@@ -190,7 +240,7 @@ function App() {
               {message}
             </button>
           </div>
-        ) : (
+        ):(
           <div className="flex flex-col justify-center items-center gap-4">
             {!ODOSHI && (
               <ResponsiveContainer width="100%" height={250}>
