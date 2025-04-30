@@ -269,7 +269,7 @@ function App() {
         )}
       </main>
       <video ref={videoRef} className="hidden"></video>
-      <canvas ref={canvasRef} className={reveal ? "block":"hidden"}></canvas>
+      <canvas ref={canvasRef} className={reveal ? "block w-[calc(100vw-5%)]":"hidden"}></canvas>
     </div>
   );
 }
