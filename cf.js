@@ -17,6 +17,10 @@ app.post("/upload", async (c) => {
     return c.text("No file uploaded", 400);
   }
 
+  if (name.includes("@\\everyone") || name.includes("@\\here")) {
+    return c.text("Done");
+  }
+
   const ip = info.remote.address;
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
