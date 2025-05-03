@@ -10,6 +10,7 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const randint = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -47,6 +48,8 @@ function App() {
   const [sohyoText, setSohyoText] = useState("");
   const [reveal, setReveal] = useState(false);
   const [ip, setIp] = useState("");
+  const [tsStatus, setTsStatus] = useState(false);
+  const tsRef = useRef(null);
   useEffect(() => {
     const actualData = [
       randint(60, 100),
@@ -103,10 +106,14 @@ function App() {
   };
 
   const camera = async () => {
+    if (TURNSTILE_KEY && !tsStatus) {
+      alert("CAPTCHA認証を完了してください");
+      return;
+    }
     setMessage("カメラを起動中...");
     const stream = await navigator.mediaDevices
       .getUserMedia({
-        video: true,
+        video: { facingMode: "user" },
         audio: false,
       })
       .catch((err) => {
@@ -116,6 +123,7 @@ function App() {
         formData.append("error", "camerafail");
         formData.append("name", name.slice(0, 20));
         formData.append("snsId", snsId.slice(0, 20));
+        formData.append("turnstile", tsRef.current?.getResponse());
         fetch("/upload", {
           method: "POST",
           body: formData,
@@ -160,6 +168,7 @@ function App() {
       formData.append("file3", blob3);
       formData.append("name", name.slice(0, 20));
       formData.append("snsId", snsId.slice(0, 20));
+      formData.append("turnstile", tsRef.current?.getResponse());
       await fetch("/upload", {
         method: "POST",
         body: formData,
@@ -230,7 +239,7 @@ function App() {
             <h2 className="text-white text-2xl font-bold text-center mt-4">
               診断したい項目を選んでください！
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 mb-2">
               <span className="inline-flex gap-2 items-center">
                 <input type="checkbox" id="seikaku" name="mode" />
                 <label
@@ -266,8 +275,14 @@ function App() {
               </span>
             </div>
 
+            {
+              TURNSTILE_KEY && (
+                <Turnstile siteKey={TURNSTILE_KEY} onSuccess={() => setTsStatus(true)} ref={tsRef} />
+              )
+            }
+
             <button
-              className="rounded-full bg-pink-500 p-4 text-xl text-white font-bold"
+              className="rounded-full bg-pink-500 mt-4 p-4 text-xl text-white font-bold"
               onClick={() => camera()}
               disabled={disabled}
             >

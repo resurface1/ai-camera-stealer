@@ -14,5 +14,6 @@ export default defineConfig({
   define: {
     ODOSHI: process.env.ODOSHI === "true" ? "true" : "false",
     MODE: JSON.stringify(process.env.MODE),
+    TURNSTILE_KEY: JSON.stringify(process.env.TURNSTILE_KEY),
   }
 });
