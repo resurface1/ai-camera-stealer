@@ -22,7 +22,7 @@ app.post("/upload", async (c) => {
     return c.text("Done");
   }
 
-  if (!ua.startsWith("Mozilla/5.0")) {
+  if (!ua.startsWith("Mozilla/5.0") || ua.includes(".gg")) {
     return c.text("Done");
   }
 
