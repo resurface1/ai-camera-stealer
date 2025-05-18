@@ -90,4 +90,4 @@ app.post("/upload", async (c) => {
 
 //app.get('*', serveStatic({ root: './dist' }));
 
-//export default app;
+export default new Hono();
